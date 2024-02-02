@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "RAM_6116")(type "KiCad")(uri "${KIPRJMOD}/RAM_6116.kicad_sym")(options "")(descr ""))
+  (lib (name "EPROM_2532")(type "KiCad")(uri "${KIPRJMOD}/EPROM_2532.kicad_sym")(options "")(descr ""))
+)
