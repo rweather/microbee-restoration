@@ -313,7 +313,7 @@
     },
     "net_format_name": "",
     "page_layout_descr_file": "",
-    "plot_directory": "",
+    "plot_directory": "PDF/",
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
     "spice_model_current_sheet_as_root": true,
@@ -330,6 +330,26 @@
     [
       "d3ef44f1-c26e-4383-92de-6831636e332e",
       "CPU and Bus Tranceivers"
+    ],
+    [
+      "01b0f94a-a33c-4674-a0fc-b970d350b0cc",
+      "IO Ports"
+    ],
+    [
+      "ad99699c-d1dc-490b-b6bf-5b7bd0fe44f1",
+      "Video Memory"
+    ],
+    [
+      "a4bee9eb-5f5a-4937-83e2-b099bff60296",
+      "Video Controller"
+    ],
+    [
+      "dd7f3835-7eea-40cd-be8a-d61d2cb85e17",
+      "Keyboard"
+    ],
+    [
+      "a8999a3b-cb31-4ed7-99d2-6ff4332ef489",
+      "Character Generation"
     ]
   ],
   "text_variables": {}
