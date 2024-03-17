@@ -3272,7 +3272,7 @@
     (property "Reference" "U13" (at 143.1641 52.07 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "2353" (at 143.1641 54.61 0)
+    (property "Value" "2516" (at 143.1641 54.61 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Package_DIP:DIP-24_W15.24mm" (at 140.97 54.61 0)

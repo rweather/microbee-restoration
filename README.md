@@ -20,7 +20,30 @@ starting the restoration.
 
 ## Technical specifications
 
-TBD
+Main board:
+
+* Z80 CPU running at 2MHz.
+* Z8420 PIO for casette, speaker, RS232, and expansion.
+* 6545-1 CRT controller with composite video output.
+* 2K of video RAM.
+* 2K of character generator RAM.
+* 2K of character generator ROM.
+
+Core memory board:
+
+* 32K of user static RAM with provision for battery backup of the RAM contents.
+* 24K of EPROM for BASIC and EDASM.
+* Spare 4K EPROM slot for the NET ROM.
+* 50-pin expansion connector.
+
+## Schematics
+
+I have reproduced the schematics for the main board and core board in
+KiCad and generated PDF versions.  The original schematics can be hard to read.
+
+* [Microbee Main Board](schematics/Microbee_Kit_Main_Board/PDF/Microbee_Kit_Main_Board.pdf)
+* [Microbee Core Board](schematics/Microbee_Kit_Core_Board/PDF/Microbee_Kit_Core_Board.pdf)
+* [Scan of the original paper schematic](schematics/Microbee-Kit-Schematic.pdf)
 
 ## Restoration
 
@@ -67,48 +90,114 @@ This is the main board:
 
 The memory core board has 32K of RAM fitted, consisting of sixteen 6116 2K x 8
 static RAM chips.  It also has 24K of ROM's fitted for BASIC and EDASM,
-consisting of six 2532 4K x 8 EPROM's.  The original "net" ROM was
+consisting of six 2532 4K x 8 EPROM's.  The original "NET" ROM was
 not present.
 
 <img alt="Initial Condition Core Board" src="photos/initial-condition-core-board.jpg" width="860"/>
 
-### Power Supply
+### Power supply
 
 The power supply was in rough shape:
 
 <img alt="Initial Condition Power Supply" src="photos/initial-condition-power-supply.jpg" height="600"/>
 
 The main 4700uF filter capacitor (C29) had died and spread muck on the board
-long ago.  Brian replaced it with a small 330uF capacitor.
+long ago.  Brian replaced it with a small 330uF capacitor.  The 20V protection
+Zener diode D15 was missing.
 
-D14 is supposed to be a 1N4001 according to the schematic, but it didn't
-look like one.  And the 20V protection Zener diode D15 is missing.
+The 7805 regulator IC37 is underneath the board; it is a large TO-3 package
+and runs very hot when the computer is powered on.  There is headsink
+compound on the regulator to transfer the heat to the metal base of the unit.
 
-Brian provided me with the original 12V power supply:
+<img alt="Voltage Regulator" src="photos/voltage-regulator.jpg" width="860"/>
 
-<img alt="Initial Condition Power Brick" src="photos/initial-condition-power-brick.jpg" width="860"/>
+<img alt="Voltage Regulator Hole" src="photos/voltage-regulator-hole.jpg" width="860"/>
 
-That's going in the rubbish bin!  I don't trust it not to explode on me.
-
-The composite video output is on the 5-pin DIN connector, but the power
-supply cable Brian gave me didn't have video.  So I had to make up a new
-cable anyway.  Looking from the back of the case towards the front,
-the pinout is as follows:
+The 12V power input and the composite video output is on the 5-pin DIN
+connector.  Brian didn't supply me with a power cable, so I had to make
+one up.  Looking from the back of the case towards the front, the
+pinout is as follows:
 
 <img alt="Pinout of Power Connector" src="photos/power-connector-5-pin-din.png" width="860"/>
 
 There were missing components in the cassette interface, particularly IC35,
 so I didn't bother connecting the cassette in and out lines.  Just power,
-composite video, and ground.
+composite video, and ground.  Here is what the assembled cable looks like:
 
-## Schematics
+<img alt="Assembled Power Connector" src="photos/power-connector-assembled.jpg" width="860"/>
 
-I have reproduced the schematics for the main board and core board in
-KiCad and generated PDF versions.  The original schematics can be hard to read.
+### Checking the voltage rails
 
-* [Microbee Main Board](schematics/Microbee_Kit_Main_Board/PDF/Microbee_Kit_Main_Board.pdf)
-* [Microbee Core Board](schematics/Microbee_Kit_Core_Board/PDF/Microbee_Kit_Core_Board.pdf)
-* [Scan of the original paper schematic](schematics/Microbee-Kit-Schematic.pdf)
+I powered the board on.  No blue smoke but no composite video either.
+The output of the main 7805 voltage regulator was 5.03V.  The VCC pins of
+the EPROM's on the memory core board were also around 5.03V.
+
+The VCC pins on the 6116 static RAM's and the RAM-related TTL glue logic
+on the core board were sitting around 4.37V.  That was odd.
+
+I removed the core board and checked the voltage rails on various chips
+on the main board.  Everything was 5.03V or thereabouts, including the
+6116 video RAM chips on the main board.
+
+So something seemed to be wrong with the RAM circuitry on the core board.
+
+I eventually figured it out.  The core board has provision for battery
+backup of the 6116 static RAM's with a 3V battery.  The diode D5 (1N914)
+is between the 5V supply and the RAM VCC supply.  This diode was causing a
+voltage drop of 0.63V.
+
+The large voltage drop was bothering me, so I replaced D5 with a Schottky
+1N5819 which has a lower voltage drop.  This raised the voltage on the
+RAM's from 4.63V to 4.78V.
+
+I also took the opportunity to fit LED1 to the core board which was missing.
+LED1 was originally a 5V/3V indicator for showing when the RAM was on
+battery power.  The drive transistor TR1 was missing from the board, so I
+instead bodged a wire to hook LED1 up to 5V to make a power indicator.
+
+<img alt="Modified Core Board" src="photos/modified-core-board.jpg" width="860"/>
+
+### Upgrading the power supply
+
+After cleaning up the muck from the former destroyed C29, I replaced Brian's
+330uF filter capacitor with a 4700uF one.  I also replaced D14 (1N4004)
+and fitted D15 (1N4747).  I also reflowed the solder on the 7805 to ensure it
+has a good connection to the PCB tracks.
+
+D14 may not have strictly needed replacing but because it is the main
+current-carrying diode in the system, I felt it best to upgrade it to a
+modern diode.
+
+<img alt="Modified Power Supply" src="photos/modified-power-supply.jpg" height="600"/>
+
+### Chip testing
+
+The Microbee was still not working, so I decided to pull all of the chips
+out of their sockets and test them with my
+[BackBit Chip Tester Pro V2](https://store.backbit.io/product/chip-tester/).
+
+There were some bad TTL logic chips on the main board, but everything else
+was working.  The following bad chips were replaced on the main board:
+
+* IC24 and IC28 - 74LS244
+* IC27 - 74LS85
+* IC33 - 74LS74
+
+On the core board, all of the HM6116P static RAM chips were bad.
+All 16 of them!  The TTL logic and EPROM's were fine.  In contrast,
+the two HM6116LP static RAM chips on the main board were fine.  I'm not
+sure what happened; possibilities include:
+
+1. Voltage spike on the RAM power rail sometime in the past?
+2. Degraded slowly over time while being undervolted by the 3V battery backup?
+3. Maybe HM6116P is not as reliable over the long term as HM6116LP?
+4. The dead 74LS244 bus transceiver IC24 is on the same address bus as the
+   core board RAM chips.  Maybe it took them out when it died?  The static RAM
+   chips on the main board are not directly connected to the transceivers;
+   there are 74LS157 multiplexer chips between the transceivers and the
+   main board RAM which may have protected them.
+
+I put in an order on eBay for replacement chips.
 
 ## Resources
 
@@ -116,6 +205,24 @@ KiCad and generated PDF versions.  The original schematics can be hard to read.
 * [Microbee Technology](https://www.microbeetechnology.com.au/)
 * [Microbee Software Preservation Project](https://www.microbee-mspp.org.au/)
 * [Microbee Documentation @ uber-leet.com](https://microbee.uber-leet.com/index.php?page=microbee_documentation)
+
+## Summary of the modifications
+
+This section has a summary of the modifications that I made to the Microbee.
+Main board:
+
+* Made up a new power and video cable for the 5-pin DIN connector.
+* Replaced the main filter capacitor C29 in the power supply.
+* Replaced D14 and D15 in the power supply.
+* Replaced several dead 74LS TTL logic chips: IC24, IC27, IC28, and IC33.
+* TBD
+
+Core board:
+
+* Replaced D5 with a 1N5819 to reduce the voltage drop on the 5V supply
+  to the RAM chips.
+* Add LED1 to the board as a power indication LED.
+* TBD
 
 ## Acknowledgements
 
