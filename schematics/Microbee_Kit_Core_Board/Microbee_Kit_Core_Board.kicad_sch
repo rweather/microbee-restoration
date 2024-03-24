@@ -3577,7 +3577,7 @@
     (property "Reference" "LED1" (at 271.78 144.4625 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
-    (property "Value" "5V Power" (at 271.78 147.0025 90)
+    (property "Value" "Backup" (at 271.78 147.0025 90)
       (effects (font (size 1.27 1.27)) (justify right))
     )
     (property "Footprint" "" (at 267.97 144.145 0)

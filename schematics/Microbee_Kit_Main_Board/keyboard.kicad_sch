@@ -2140,10 +2140,6 @@
     (uuid fe317ded-3d88-4b60-8e6c-3d5b69d875f1)
   )
 
-  (text "TBD: REPT key?" (at 230.505 126.365 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 5086d01c-5bf4-4555-9a5f-2063e91df276)
-  )
   (text "TBD: Connections to Video Controller Schematic" (at 40.64 26.67 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 8b4bfcf1-93db-435b-88ce-6029725cc02a)
